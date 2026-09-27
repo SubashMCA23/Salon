@@ -55,7 +55,7 @@ export const AppointmentCTA: React.FC = () => {
               Book Your Appointment
             </Button>
             <a
-              href="https://wa.me/919842100000?text=Hello%20Luxe%20Salon!%20I%20would%20like%20to%20reserve%20an%20appointment."
+              href="https://wa.me/919786149477?text=Hello%20Luxe%20Salon!%20I%20would%20like%20to%20reserve%20an%20appointment."
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:py-4 bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-900 text-xs font-semibold uppercase tracking-wider transition-all duration-300 w-full sm:w-auto"
@@ -66,8 +66,8 @@ export const AppointmentCTA: React.FC = () => {
           </div>
 
           <div className="mt-6 sm:mt-8 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-[11px] text-stone-400 font-light">
-            <a href="tel:+919842100000" className="flex items-center gap-1.5 hover:text-white transition-colors">
-              <Phone className="w-3.5 h-3.5 text-luxe-gold" /> +91 98421 00000
+            <a href="tel:+919786149477" className="flex items-center gap-1.5 hover:text-white transition-colors">
+              <Phone className="w-3.5 h-3.5 text-luxe-gold" /> +91 97861 49477
             </a>
             <span className="hidden sm:inline">•</span>
             <span>Avinashi Road, Tiruppur</span>

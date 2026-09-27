@@ -32,7 +32,7 @@ export const Footer: React.FC = () => {
                 <Instagram className="w-4 h-4" />
               </a>
               <a
-                href="https://wa.me/919842100000"
+                href="https://wa.me/919786149477"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-stone-300 hover:text-emerald-400 hover:border-emerald-400 transition-colors"
@@ -128,8 +128,8 @@ export const Footer: React.FC = () => {
               </div>
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-luxe-gold shrink-0" />
-                <a href="tel:+919842100000" className="hover:text-luxe-gold transition-colors">
-                  +91 98421 00000
+                <a href="tel:+919786149477" className="hover:text-luxe-gold transition-colors">
+                  +91 97861 49477
                 </a>
               </div>
               <div className="flex items-center gap-2.5">

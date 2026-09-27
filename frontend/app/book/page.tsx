@@ -82,7 +82,7 @@ function BookingContent() {
                 Prefer direct messaging? Chat live with our front-desk concierge for immediate time slot confirmations.
               </p>
               <a
-                href="https://wa.me/919842100000?text=Hello%20Luxe%20Salon!%20I%20would%20like%20to%20reserve%20an%20appointment."
+                href="https://wa.me/919786149477?text=Hello%20Luxe%20Salon!%20I%20would%20like%20to%20reserve%20an%20appointment."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-4 w-full inline-flex items-center justify-center gap-2 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold uppercase tracking-wider transition-colors shadow-xs"
@@ -103,10 +103,10 @@ function BookingContent() {
                     Call Front Desk
                   </h4>
                   <a
-                    href="tel:+919842100000"
+                    href="tel:+919786149477"
                     className="font-serif text-lg sm:text-xl text-luxe-charcoal hover:text-luxe-gold-dark font-semibold block mt-0.5"
                   >
-                    +91 98421 00000
+                    +91 97861 49477
                   </a>
                 </div>
               </div>

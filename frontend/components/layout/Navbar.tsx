@@ -64,14 +64,14 @@ export const Navbar: React.FC = () => {
 
           <div className="flex items-center gap-6">
             <a
-              href="tel:+919842100000"
+              href="tel:+919786149477"
               className="flex items-center gap-1.5 hover:text-luxe-gold transition-colors text-stone-300"
             >
               <Phone className="w-3 h-3 text-luxe-gold" />
-              <span>+91 98421 00000</span>
+              <span>+91 97861 49477</span>
             </a>
             <a
-              href="https://wa.me/919842100000?text=Hello%20Luxe%20Salon"
+              href="https://wa.me/919786149477?text=Hello%20Luxe%20Salon"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 hover:text-luxe-gold transition-colors text-stone-300"
@@ -214,7 +214,7 @@ export const Navbar: React.FC = () => {
               </Button>
 
               <a
-                href="https://wa.me/919842100000?text=Hello%20Luxe%20Salon!%20I%20would%20like%20to%20reserve%20an%20appointment."
+                href="https://wa.me/919786149477?text=Hello%20Luxe%20Salon!%20I%20would%20like%20to%20reserve%20an%20appointment."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full flex items-center justify-center gap-2 py-3.5 bg-emerald-50 border border-emerald-600/30 text-emerald-800 text-xs uppercase tracking-wider font-semibold"
@@ -224,9 +224,9 @@ export const Navbar: React.FC = () => {
               </a>
 
               <div className="pt-3 flex items-center justify-between text-[11px] text-luxe-muted font-light">
-                <a href="tel:+919842100000" className="flex items-center gap-1.5 hover:text-luxe-charcoal">
+                <a href="tel:+919786149477" className="flex items-center gap-1.5 hover:text-luxe-charcoal">
                   <Phone className="w-3.5 h-3.5 text-luxe-gold" />
-                  <span>+91 98421 00000</span>
+                  <span>+91 97861 49477</span>
                 </a>
                 <span>Tiruppur, TN</span>
               </div>

@@ -96,7 +96,7 @@ export default function RootLayout({
     image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=1200&auto=format&fit=crop',
     '@id': 'http://localhost:3000',
     url: 'http://localhost:3000',
-    telephone: '+919842100000',
+    telephone: '+919786149477',
     priceRange: '₹₹₹',
     address: {
       '@type': 'PostalAddress',
@@ -129,7 +129,7 @@ export default function RootLayout({
     ],
     sameAs: [
       'https://instagram.com/luxesalon',
-      'https://wa.me/919842100000',
+      'https://wa.me/919786149477',
     ],
   };
 

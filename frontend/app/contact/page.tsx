@@ -142,10 +142,10 @@ export default function ContactPage() {
                     Telephone
                   </h4>
                   <a
-                    href="tel:+919842100000"
+                    href="tel:+919786149477"
                     className="text-xs sm:text-sm text-luxe-charcoal font-semibold hover:text-luxe-gold-dark transition-colors mt-0.5 block"
                   >
-                    +91 98421 00000
+                    +91 97861 49477
                   </a>
                 </div>
               </div>
@@ -160,12 +160,12 @@ export default function ContactPage() {
                     Direct WhatsApp Concierge
                   </h4>
                   <a
-                    href="https://wa.me/919842100000?text=Hello%20Luxe%20Salon!%20I%20have%20an%20inquiry."
+                    href="https://wa.me/919786149477?text=Hello%20Luxe%20Salon!%20I%20have%20an%20inquiry."
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-xs text-emerald-700 font-semibold hover:underline mt-0.5 block"
                   >
-                    Chat on WhatsApp (+91 98421 00000)
+                    Chat on WhatsApp (+91 97861 49477)
                   </a>
                 </div>
               </div>

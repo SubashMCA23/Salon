@@ -31,7 +31,7 @@ export function generateWhatsAppLink(data: {
   phone?: string;
   bookingRef?: string;
 }): string {
-  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919842100000';
+  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919786149477';
   const text = `Hello Luxe Salon! ✨\nI would like to book an appointment:\n\n*Name:* ${data.name}\n*Service:* ${data.service}\n*Date:* ${data.date}\n*Time:* ${data.time}\n${data.phone ? `*Phone:* ${data.phone}\n` : ''}${data.bookingRef ? `*Booking ID:* #${data.bookingRef}\n` : ''}\nPlease confirm my appointment slot. Thank you!`;
 
   return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;

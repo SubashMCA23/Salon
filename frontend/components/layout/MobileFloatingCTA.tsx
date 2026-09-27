@@ -47,7 +47,7 @@ export const MobileFloatingCTA: React.FC = () => {
         </Link>
 
         <a
-          href="https://wa.me/919842100000?text=Hello%20Luxe%20Salon!%20I%20would%20like%20to%20reserve%20an%20appointment."
+          href="https://wa.me/919786149477?text=Hello%20Luxe%20Salon!%20I%20would%20like%20to%20reserve%20an%20appointment."
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Book via WhatsApp"

@@ -87,7 +87,7 @@ export const createAppointment = async (req: Request, res: Response) => {
 
     const whatsappMessage = `Hello Luxe Salon! ✨\nI have requested an appointment:\n\n*Name:* ${appointment.name}\n*Service:* ${appointment.service}\n*Date:* ${formattedDate}\n*Time:* ${appointment.appointmentTime}\n*Phone:* ${appointment.phone}\n*Booking ID:* #${appointment._id.toString().slice(-6).toUpperCase()}\n\nPlease confirm my appointment slot. Thank you!`;
 
-    const salonWhatsAppNumber = '919842100000'; // Luxe Salon Tiruppur Official Number
+    const salonWhatsAppNumber = process.env.SALON_WHATSAPP_NUMBER || '919786149477'; // Luxe Salon Tiruppur Official Number
     const whatsappUrl = `https://wa.me/${salonWhatsAppNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 
     res.status(201).json({
