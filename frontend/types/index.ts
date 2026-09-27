@@ -60,6 +60,7 @@ export interface Testimonial {
   serviceUsed?: string;
   location?: string;
   createdAt: string;
+  updatedAt?: string;
 }
 
 export interface Appointment {

@@ -11,6 +11,12 @@ import {
   ApiResponse,
   AdminUser,
 } from '@/types';
+import {
+  FALLBACK_SERVICES,
+  FALLBACK_GALLERY,
+  FALLBACK_OFFERS,
+  FALLBACK_TESTIMONIALS,
+} from './fallbackData';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
@@ -62,24 +68,60 @@ class ApiClient {
 
   // SERVICES
   async getServices(category?: string, search?: string, activeOnly = true): Promise<Service[]> {
-    const params = new URLSearchParams();
-    if (category && category !== 'ALL') params.append('category', category);
-    if (search) params.append('search', search);
-    if (!activeOnly) params.append('activeOnly', 'false');
+    try {
+      const params = new URLSearchParams();
+      if (category && category !== 'ALL') params.append('category', category);
+      if (search) params.append('search', search);
+      if (!activeOnly) params.append('activeOnly', 'false');
 
-    const res = await this.request<Service[]>(`/services?${params.toString()}`, {
-      method: 'GET',
-      next: { revalidate: 60 },
-    });
-    return res.data || [];
+      const res = await this.request<Service[]>(`/services?${params.toString()}`, {
+        method: 'GET',
+        next: { revalidate: 60 },
+      });
+      if (res && res.data && res.data.length > 0) {
+        return res.data;
+      }
+    } catch (err) {
+      console.warn('[API Client] Backend unreachable, serving fallback services:', err);
+    }
+
+    // Fallback services
+    let filtered = [...FALLBACK_SERVICES];
+    if (category && category !== 'ALL') {
+      filtered = filtered.filter((s) => s.category.toUpperCase() === category.toUpperCase());
+    }
+    if (search) {
+      const q = search.toLowerCase();
+      filtered = filtered.filter(
+        (s) =>
+          s.name.toLowerCase().includes(q) ||
+          s.description.toLowerCase().includes(q) ||
+          (s.subCategory && s.subCategory.toLowerCase().includes(q))
+      );
+    }
+    return filtered;
   }
 
   async getServiceById(id: string): Promise<{ service: Service; related: Service[] }> {
-    const res = await this.request<Service>(`/services/${id}`);
-    return {
-      service: res.data as Service,
-      related: res.related || [],
-    };
+    try {
+      const res = await this.request<Service>(`/services/${id}`);
+      if (res && res.data) {
+        return {
+          service: res.data as Service,
+          related: res.related || [],
+        };
+      }
+    } catch (err) {
+      console.warn('[API Client] Backend unreachable, searching fallback service:', err);
+    }
+
+    const service =
+      FALLBACK_SERVICES.find((s) => s._id === id || s.name.toLowerCase().includes(id.toLowerCase())) ||
+      FALLBACK_SERVICES[0];
+    const related = FALLBACK_SERVICES.filter(
+      (s) => s._id !== service._id && s.category === service.category
+    ).slice(0, 3);
+    return { service, related };
   }
 
   async createService(data: Partial<Service>): Promise<Service> {
@@ -106,12 +148,27 @@ class ApiClient {
 
   // GALLERY
   async getGallery(category?: string, beforeAfter?: boolean): Promise<GalleryItem[]> {
-    const params = new URLSearchParams();
-    if (category && category !== 'All') params.append('category', category);
-    if (beforeAfter) params.append('beforeAfter', 'true');
+    try {
+      const params = new URLSearchParams();
+      if (category && category !== 'All') params.append('category', category);
+      if (beforeAfter) params.append('beforeAfter', 'true');
 
-    const res = await this.request<GalleryItem[]>(`/gallery?${params.toString()}`);
-    return res.data || [];
+      const res = await this.request<GalleryItem[]>(`/gallery?${params.toString()}`);
+      if (res && res.data && res.data.length > 0) {
+        return res.data;
+      }
+    } catch (err) {
+      console.warn('[API Client] Backend unreachable, serving fallback gallery:', err);
+    }
+
+    let filtered = [...FALLBACK_GALLERY];
+    if (category && category !== 'All') {
+      filtered = filtered.filter((g) => g.category.toLowerCase() === category.toLowerCase());
+    }
+    if (beforeAfter !== undefined) {
+      filtered = filtered.filter((g) => g.isBeforeAfter === beforeAfter);
+    }
+    return filtered;
   }
 
   async createGallery(data: Partial<GalleryItem>): Promise<GalleryItem> {
@@ -138,8 +195,15 @@ class ApiClient {
 
   // OFFERS
   async getOffers(all = false): Promise<Offer[]> {
-    const res = await this.request<Offer[]>(`/offers${all ? '?all=true' : ''}`);
-    return res.data || [];
+    try {
+      const res = await this.request<Offer[]>(`/offers${all ? '?all=true' : ''}`);
+      if (res && res.data && res.data.length > 0) {
+        return res.data;
+      }
+    } catch (err) {
+      console.warn('[API Client] Backend unreachable, serving fallback offers:', err);
+    }
+    return FALLBACK_OFFERS;
   }
 
   async createOffer(data: Partial<Offer>): Promise<Offer> {
@@ -166,8 +230,15 @@ class ApiClient {
 
   // TESTIMONIALS
   async getTestimonials(all = false): Promise<Testimonial[]> {
-    const res = await this.request<Testimonial[]>(`/testimonials${all ? '?all=true' : ''}`);
-    return res.data || [];
+    try {
+      const res = await this.request<Testimonial[]>(`/testimonials${all ? '?all=true' : ''}`);
+      if (res && res.data && res.data.length > 0) {
+        return res.data;
+      }
+    } catch (err) {
+      console.warn('[API Client] Backend unreachable, serving fallback testimonials:', err);
+    }
+    return FALLBACK_TESTIMONIALS;
   }
 
   async createTestimonial(data: Partial<Testimonial>): Promise<Testimonial> {
@@ -199,16 +270,43 @@ class ApiClient {
     whatsappUrl: string;
     message: string;
   }> {
-    const res = await this.request<Appointment>('/appointments', {
-      method: 'POST',
-      body: JSON.stringify(input),
-    });
-    return {
-      appointment: res.data!,
-      bookingRef: res.bookingRef || 'LUXE',
-      whatsappUrl: res.whatsappUrl || '',
-      message: res.message || 'Appointment requested successfully.',
-    };
+    try {
+      const res = await this.request<Appointment>('/appointments', {
+        method: 'POST',
+        body: JSON.stringify(input),
+      });
+      return {
+        appointment: res.data!,
+        bookingRef: res.bookingRef || 'LUXE',
+        whatsappUrl: res.whatsappUrl || '',
+        message: res.message || 'Appointment requested successfully.',
+      };
+    } catch (err) {
+      console.warn('[API Client] Backend booking endpoint unreachable, generating direct WhatsApp booking link:', err);
+      const bookingRef = 'LX' + Math.floor(1000 + Math.random() * 9000);
+      const salonPhone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919786149477';
+      const msg = `Hello Luxe Salon! ✨\nI would like to book an appointment:\n\n*Name:* ${input.name}\n*Service:* ${input.service}\n*Date:* ${input.appointmentDate}\n*Time:* ${input.appointmentTime}\n*Phone:* ${input.phone}\n*Booking ID:* #${bookingRef}\n\nPlease confirm my appointment slot. Thank you!`;
+      const whatsappUrl = `https://wa.me/${salonPhone}?text=${encodeURIComponent(msg)}`;
+      return {
+        appointment: {
+          _id: bookingRef,
+          name: input.name,
+          email: input.email,
+          phone: input.phone,
+          service: input.service,
+          appointmentDate: input.appointmentDate,
+          appointmentTime: input.appointmentTime,
+          message: input.message,
+          notes: input.message,
+          status: 'pending',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
+        bookingRef,
+        whatsappUrl,
+        message: 'Your appointment request has been initiated. Click below to confirm via WhatsApp.',
+      };
+    }
   }
 
   async getAppointments(status?: string, date?: string, search?: string): Promise<Appointment[]> {
