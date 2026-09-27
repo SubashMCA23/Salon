@@ -1,0 +1,549 @@
+import bcrypt from 'bcryptjs';
+import Service from '../models/Service.js';
+import Gallery from '../models/Gallery.js';
+import Offer from '../models/Offer.js';
+import Testimonial from '../models/Testimonial.js';
+import Appointment from '../models/Appointment.js';
+import ContactMessage from '../models/ContactMessage.js';
+import AdminUser from '../models/AdminUser.js';
+
+export const seedDatabase = async () => {
+  try {
+    console.log('[Seed] Seeding database with curated balanced unisex LUXE SALON data...');
+
+    // Clear existing collections to refresh with updated high-res visuals
+    await Promise.all([
+      Service.deleteMany({}),
+      Gallery.deleteMany({}),
+      Offer.deleteMany({}),
+      Testimonial.deleteMany({}),
+      Appointment.deleteMany({}),
+      ContactMessage.deleteMany({}),
+      AdminUser.deleteMany({}),
+    ]);
+
+    // 1. Seed Admin User
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD || 'LuxeAdmin2026!', salt);
+    await AdminUser.create({
+      name: 'Luxe Salon Director',
+      email: (process.env.ADMIN_EMAIL || 'admin@luxesalon.com').toLowerCase(),
+      password: hashedPassword,
+      role: 'admin',
+    });
+
+    // 2. Seed Services (Mix of Men's Grooming and Women's Beauty & Hair)
+    const services = [
+      // MEN'S GROOMING SERVICES
+      {
+        name: 'The Executive Gentleman Haircut & Styling',
+        category: "MEN'S GROOMING",
+        subCategory: "Men's Haircut",
+        description: 'Bespoke scissor architecture, precision taper fade, eucalyptus hot towel compress, and matte styling clay finish.',
+        longDescription: 'The definitive masculine haircut experience. Tailored shear and clipper craftsmanship complemented by scalp tension release and personalized grooming consultation.',
+        price: 950,
+        startingPrice: false,
+        duration: '50 mins',
+        image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=1200&auto=format&fit=crop',
+        isActive: true,
+        isFeatured: true,
+        benefits: ['Tailored to head & jawline structure', 'Eucalyptus hot towel relaxation', 'Precision straight razor nape clean', 'Matte clay styling finish'],
+        processSteps: ['Face Architecture Diagnostic', 'Precision Scissor & Fade Sculpt', 'Hot Towel Neck Cleanse', 'Texture Clay Silhouette Styling'],
+        order: 1,
+      },
+      {
+        name: 'Straight-Razor Royal Beard Architecture',
+        category: "MEN'S GROOMING",
+        subCategory: 'Beard Styling',
+        description: 'Warm lather straight-razor detailing, botanical beard oil hot treatment, and facial symmetry beard sculpting.',
+        longDescription: 'Sharp edges, dense gradient blending, and therapeutic conditioning to nourish coarse facial hair and soothe sensitive neck skin.',
+        price: 650,
+        startingPrice: false,
+        duration: '40 mins',
+        image: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=1200&auto=format&fit=crop',
+        isActive: true,
+        isFeatured: true,
+        benefits: ['Razor-sharp geometric beard line', 'Prevents ingrown razor bumps', 'Infused with cold-pressed cedarwood oil', 'Hydrating aftershave balm'],
+        processSteps: ['Beard Length & Contour Assessment', 'Pre-Shave Essential Oil Conditioning', 'Traditional Straight-Razor Edge Work', 'Cold Towel Pore Tightening'],
+        order: 2,
+      },
+      {
+        name: 'Men\'s Charcoal Deep Pore Detox Facial',
+        category: "MEN'S GROOMING",
+        subCategory: 'Facial',
+        description: 'Engineered specifically for men’s thicker dermis to unclog deep pollution, banish blackheads, and matte excess oil.',
+        longDescription: 'Combines activated bamboo charcoal with tea tree botanicals, sonic brush scrubbing, and a calming marine collagen pack.',
+        price: 2200,
+        startingPrice: false,
+        duration: '60 mins',
+        image: 'https://images.unsplash.com/photo-1512290900672-1f02e6d0a7a0?q=80&w=1200&auto=format&fit=crop',
+        isActive: true,
+        isFeatured: true,
+        benefits: ['Deep pore blackhead extraction', 'Controls excess oil & shine', 'Soothes daily razor irritation', 'Zero downtime'],
+        processSteps: ['Charcoal Sonic Cleanse', 'Purifying Thermal Steam', 'Blackhead Ultrasonic Extraction', 'Anti-Pollution Mattifying Mask'],
+        order: 3,
+      },
+      {
+        name: 'Men\'s Restorative Tea Tree Scalp Spa',
+        category: "MEN'S GROOMING",
+        subCategory: 'Hair Spa',
+        description: 'Intense anti-dandruff and follicle energizing therapy with organic tea tree, peppermint oil, and acupressure.',
+        longDescription: 'Rebalances dry or oily scalp microbiome, stimulates dormant hair follicles, and relieves chronic scalp tension with invigorating cooling extracts.',
+        price: 1800,
+        startingPrice: false,
+        duration: '60 mins',
+        image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=1200&auto=format&fit=crop',
+        isActive: true,
+        isFeatured: false,
+        benefits: ['Eliminates stubborn dandruff flakes', 'Strengthens thinning hair roots', 'Refreshing mint cooling sensation', 'Deep neck acupressure'],
+        processSteps: ['Scalp Dermascope Analysis', 'Tea Tree Purifying Scrub', 'Micro-Mist Thermal Steam', 'Acupressure Scalp Massage'],
+        order: 4,
+      },
+      {
+        name: 'Gentleman\'s Natural Grey Blending & Colour',
+        category: "MEN'S GROOMING",
+        subCategory: 'Hair Colour',
+        description: 'Ammonia-free, ultra-subtle 10-minute tone blending for effortless natural salt-and-pepper or rich matte black.',
+        longDescription: 'Achieve undetectable, sophisticated grey coverage that fades seamlessly without harsh brassy tones or noticeable root regrowth lines.',
+        price: 1600,
+        startingPrice: false,
+        duration: '45 mins',
+        image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1200&auto=format&fit=crop',
+        isActive: true,
+        isFeatured: false,
+        benefits: ['100% natural, non-dyed appearance', 'Ammonia-free gentle formula', 'Completed in just 10 active minutes', 'Fades gracefully with washes'],
+        processSteps: ['Tone Matching Consultation', 'Targeted Grey Blending Application', 'Hydrating Nourishing Rinse', 'Scalp Barrier Soothing Tonic'],
+        order: 5,
+      },
+      {
+        name: 'Ayurvedic Brahmi Head & Shoulder Therapy',
+        category: "MEN'S GROOMING",
+        subCategory: 'Head Massage',
+        description: 'Warming herbal Brahmi & Bhringraj oil infusion with pressure-point release across temples, neck, and trapezius.',
+        longDescription: 'Release accumulated executive fatigue, enhance cranial blood circulation, and relieve neck strain with authentic Ayurvedic massage strokes.',
+        price: 1200,
+        startingPrice: false,
+        duration: '45 mins',
+        image: 'https://images.unsplash.com/photo-1519824145371-296894a0daa9?q=80&w=1200&auto=format&fit=crop',
+        isActive: true,
+        isFeatured: false,
+        benefits: ['Relieves migraines and eye strain', 'Improves sleep quality', 'Deeply nourishes hair roots', 'Eases shoulder knots'],
+        processSteps: ['Warm Herbal Oil Application', 'Temple & Crown Acupressure', 'Cervical Neck Release', 'Warm Herbal Towel Compress'],
+        order: 6,
+      },
+      {
+        name: 'The Sovereign Gentleman Full Grooming Package',
+        category: "MEN'S GROOMING",
+        subCategory: 'Grooming Packages',
+        description: 'All-inclusive executive makeover: precision haircut, straight-razor beard sculpt, detox facial, and hair spa.',
+        longDescription: 'The pinnacle of masculine luxury. Experience a comprehensive 2.5-hour grooming sanctuary in a private executive styling chair.',
+        price: 4500,
+        startingPrice: false,
+        duration: '150 mins',
+        image: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=1200&auto=format&fit=crop',
+        isActive: true,
+        isFeatured: true,
+        benefits: ['Complete head-to-toe rejuvenation', 'Private VIP barber chair', 'Botanical facial + scalp therapy', 'Signature espresso service included'],
+        processSteps: ['Cut & Beard Sculpting', 'Charcoal Detox Facial', 'Revitalizing Scalp Spa', 'Gentleman Hand & Nail Cleanse'],
+        order: 7,
+      },
+
+      // HAIR SERVICES (WOMEN / UNISEX)
+      {
+        name: 'Signature Haircut & Editorial Styling',
+        category: 'HAIR',
+        subCategory: 'Haircut & Styling',
+        description: 'Bespoke consultation, precision haircut tailored to facial geometry, luxury wash, and high-fashion blow-dry finish.',
+        longDescription: 'Our signature haircut ritual begins with an in-depth scalp and face-shape consultation, followed by precision shear sculpting.',
+        price: 1400,
+        startingPrice: false,
+        duration: '60 mins',
+        image: 'https://images.unsplash.com/photo-1560869713-7d0a29430803?q=80&w=1200&auto=format&fit=crop',
+        isActive: true,
+        isFeatured: true,
+        benefits: ['Customized to face structure', 'Organic nourishing wash included', 'Signature thermal blow-out', 'Styling home-care guidance'],
+        processSteps: ['Scalp Assessment & Consultation', 'Aromatherapy Shampoo & Conditioning', 'Precision Shear Sculpting', 'Thermal Blowout & Silhouette Finish'],
+        order: 8,
+      },
+      {
+        name: 'Deep Nourishing Moroccan Hair Spa',
+        category: 'HAIR',
+        subCategory: 'Hair Spa',
+        description: 'Intense therapeutic infusion of pure Argan oil and keratin micro-emulsions to revitalize damaged and dry tresses.',
+        longDescription: 'A multisensory restorative spa ritual designed to replenish moisture, restore structural integrity, and lock in mirror-like shine.',
+        price: 2400,
+        startingPrice: false,
+        duration: '75 mins',
+        image: 'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?q=80&w=1200&auto=format&fit=crop',
+        isActive: true,
+        isFeatured: false,
+        benefits: ['98% split end reduction', 'Infused with cold-pressed Moroccan Argan oil', 'Invigorating pressure-point acupressure', 'Velvety softness'],
+        processSteps: ['Scalp Purifying Steam', 'Intensive Argan Cream Infusion', 'Deep Acupressure Head Massage', 'Hydration Lock Rinse'],
+        order: 9,
+      },
+      {
+        name: 'Handcrafted Balayage & French Glossing',
+        category: 'HAIR',
+        subCategory: 'Highlights',
+        description: 'Artisanal freehand painting and foil highlights for natural sun-kissed dimension and seamless root growth.',
+        longDescription: 'Custom balayage, babylights, and foil placement designed to illuminate your hair with subtle gradients of caramel, honey, champagne, or mocha tones.',
+        price: 5500,
+        startingPrice: true,
+        duration: '180 mins',
+        image: 'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?q=80&w=1200&auto=format&fit=crop',
+        isActive: true,
+        isFeatured: true,
+        benefits: ['Natural root gradient', 'Custom gloss toner included', 'Bond-multiplying technology', 'Low-maintenance grow out'],
+        processSteps: ['Dimensional Mapping', 'Artisan Freehand Lighting', 'Olaplex Bond Rebuilding', 'Custom Tonal Glaze'],
+        order: 10,
+      },
+      {
+        name: 'Liquid Gold Keratin & Silk Smoothening',
+        category: 'HAIR',
+        subCategory: 'Keratin Treatment',
+        description: 'Deep structural protein treatment eliminating 95% frizz while retaining natural movement and silky elasticity.',
+        longDescription: 'Formulated with organic hydrolyzed amino acids and silk peptides to seal the hair cuticle and resist tropical humidity for up to 4 months.',
+        price: 6000,
+        startingPrice: true,
+        duration: '150 mins',
+        image: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?q=80&w=1200&auto=format&fit=crop',
+        isActive: true,
+        isFeatured: false,
+        benefits: ['Lasts up to 4 months', 'Formaldehyde-free formula', '50% faster blow-drying at home', 'Resists tropical humidity'],
+        processSteps: ['Clarifying Detox Wash', 'Keratin Complex Saturating', 'Infrared Thermo-Fusion', 'Nutritive Mask Sealing'],
+        order: 11,
+      },
+
+      // BEAUTY & SKINCARE
+      {
+        name: '24K Gold Luminescence Royal Facial',
+        category: 'BEAUTY',
+        subCategory: 'Facial',
+        description: 'Exclusive youth-enhancing facial infused with 24K colloidal gold, peptides, and ultrasonic lymphatic drainage.',
+        longDescription: 'The pinnacle of luxury skincare combining ultrasonic exfoliation, 24K pure gold leaves, and micro-current lifting.',
+        price: 3800,
+        startingPrice: false,
+        duration: '90 mins',
+        image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=1200&auto=format&fit=crop',
+        isActive: true,
+        isFeatured: true,
+        benefits: ['Immediate radiant golden glow', 'Cellular collagen stimulation', 'Ultrasonic pore cleansing', 'Lymphatic face sculpting'],
+        processSteps: ['Enzyme Peeling & Steam', 'Ultrasonic Blackhead Extraction', '24K Gold Leaf & Serum Infusion', 'Cryo-Sculpting & Hydrogel Mask'],
+        order: 12,
+      },
+      {
+        name: 'Hydra-Infusion Vortex Glow Therapy',
+        category: 'BEAUTY',
+        subCategory: 'Cleanup',
+        description: 'Medical-grade hydradermabrasion for deep pore detox, non-invasive exfoliation, and intense hyaluronic saturation.',
+        longDescription: 'Gentle vortex suction extracts impurities while bathing skin in concentrated serums rich in antioxidants and peptides.',
+        price: 2600,
+        startingPrice: false,
+        duration: '60 mins',
+        image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?q=80&w=1200&auto=format&fit=crop',
+        isActive: true,
+        isFeatured: false,
+        benefits: ['Painless vortex extraction', 'Deep hydration surge', 'Tightens enlarged pores', 'Zero downtime or redness'],
+        processSteps: ['Vortex Exfoliation', 'Salicylic & Glycolic Acid Peel', 'Automated Extraction', 'Antioxidant & Hyaluronic Infusion'],
+        order: 13,
+      },
+
+      // BRIDAL & OCCASIONS
+      {
+        name: 'Luxe Couture Bridal Makeover Experience',
+        category: 'BRIDAL & OCCASIONS',
+        subCategory: 'Bridal Makeup',
+        description: 'Complete high-definition bridal transformation including HD/Airbrush makeup, floral hair couture, and saree draping.',
+        longDescription: 'Handcrafted by master bridal artists using world-class luxury brands (Dior, Charlotte Tilbury, MAC, Huda Beauty).',
+        price: 18000,
+        startingPrice: true,
+        duration: '240 mins',
+        image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=1200&auto=format&fit=crop',
+        isActive: true,
+        isFeatured: true,
+        benefits: ['16-hour sweat & waterproof HD finish', 'Airbrush foundation perfection', 'Bespoke floral bridal hair couture', 'Precision South Indian saree pleating'],
+        processSteps: ['Pre-Wedding Skin Trial', 'Hydrating Skin Priming', 'Airbrush HD Makeup & Lashes', 'Hairstyling & Saree Couture Draping'],
+        order: 14,
+      },
+      {
+        name: 'Ethereal Engagement & Reception Glam',
+        category: 'BRIDAL & OCCASIONS',
+        subCategory: 'Engagement Makeup',
+        description: 'Sophisticated red-carpet makeup and contemporary textured waves designed to captivate under evening lights.',
+        longDescription: 'Features luminous glass skin, custom smoky or winged eye glam, 3D mink lashes, and voluminous textured hairstyles.',
+        price: 12000,
+        startingPrice: false,
+        duration: '180 mins',
+        image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=1200&auto=format&fit=crop',
+        isActive: true,
+        isFeatured: false,
+        benefits: ['Camera-ready flawless glow', 'Custom 3D mink lash application', 'Hollywood waves or messy modern bun', 'Touch-up emergency kit included'],
+        processSteps: ['Glow Primer Base Application', 'High-Definition Eye Artistry', 'Sculpted Contour & Illuminator', 'Setting & Fixer Lock'],
+        order: 15,
+      },
+    ];
+
+    await Service.insertMany(services);
+
+    // 3. Seed Gallery (Balanced ~45% Men's Grooming and ~55% Women's Hair/Bridal/Salon)
+    const galleryItems = [
+      {
+        title: 'Precision Taper Fade & Sculpted Beard',
+        category: 'Men',
+        image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=1200&auto=format&fit=crop',
+        isBeforeAfter: false,
+        description: 'Skin taper fade with tailored razor contour beard detailing for modern executive styling.',
+        featured: true,
+        order: 1,
+      },
+      {
+        title: 'Editorial Golden Caramel Balayage',
+        category: 'Hair',
+        image: 'https://images.unsplash.com/photo-1560869713-7d0a29430803?q=80&w=1200&auto=format&fit=crop',
+        isBeforeAfter: false,
+        description: 'Multi-dimensional caramel and champagne ribbon highlights on dark brunette base.',
+        featured: true,
+        order: 2,
+      },
+      {
+        title: 'Executive Hot Towel Shave & Beard Architecture',
+        category: 'Men',
+        image: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=1200&auto=format&fit=crop',
+        isBeforeAfter: false,
+        description: 'Traditional straight-razor detailing with cedarwood essential oil conditioning.',
+        featured: true,
+        order: 3,
+      },
+      {
+        title: 'Kanchipuram Silk Bridal Grandeur',
+        category: 'Bridal',
+        image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=1200&auto=format&fit=crop',
+        isBeforeAfter: false,
+        description: 'Traditional Tamil bridal makeup with bespoke temple jewelry alignment and jasmine hair garland.',
+        featured: true,
+        order: 4,
+      },
+      {
+        title: 'Gentleman Sovereign VIP Styling Suite',
+        category: 'Men',
+        image: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=1200&auto=format&fit=crop',
+        isBeforeAfter: false,
+        description: 'Our private men’s executive grooming suite with Italian hydraulic leather barber chairs.',
+        featured: true,
+        order: 5,
+      },
+      {
+        title: '24K Gold Cellular Rejuvenation Glow',
+        category: 'Beauty',
+        image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=1200&auto=format&fit=crop',
+        isBeforeAfter: false,
+        description: 'Post-facial dewiness featuring deep ultrasonic infusion and collagen lifting.',
+        featured: true,
+        order: 6,
+      },
+      {
+        title: 'Luxe Salon Private Aesthetic Lounge',
+        category: 'Salon',
+        image: 'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?q=80&w=1200&auto=format&fit=crop',
+        isBeforeAfter: false,
+        description: 'Our serene, private aesthetic lounge in Tiruppur featuring Italian styling stations.',
+        featured: true,
+        order: 7,
+      },
+      // BEFORE & AFTER 1: MEN'S GROOMING TRANSFORMATION
+      {
+        title: 'Gentleman Hair & Beard Sculpt Transformation',
+        category: 'Men',
+        image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=1200&auto=format&fit=crop',
+        isBeforeAfter: true,
+        beforeImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1200&auto=format&fit=crop',
+        afterImage: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=1200&auto=format&fit=crop',
+        description: 'From unshaped, coarse growth to a razor-sharp executive taper fade with defined beard geometry.',
+        featured: true,
+        order: 8,
+      },
+      // BEFORE & AFTER 2: HAIR SILK TRANSFORMATION
+      {
+        title: 'Liquid Keratin Silk Transformation',
+        category: 'Hair',
+        image: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?q=80&w=1200&auto=format&fit=crop',
+        isBeforeAfter: true,
+        beforeImage: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=1200&auto=format&fit=crop',
+        afterImage: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?q=80&w=1200&auto=format&fit=crop',
+        description: 'From unmanageable frizzy texture to mirror-sheen silk perfection.',
+        featured: true,
+        order: 9,
+      },
+    ];
+
+    await Gallery.insertMany(galleryItems);
+
+    // 4. Seed Offers / Packages (Balanced: Men's Grooming Package, Bridal Glow, Luxe Hair Ritual, Self-Care)
+    const offers = [
+      {
+        name: 'Gentleman’s Sovereign Grooming Package',
+        description: 'The definitive men’s rejuvenation featuring bespoke haircut, hot towel straight-razor beard sculpt, charcoal detox facial, and head massage.',
+        services: ['Executive Haircut & Styling', 'Straight Razor Beard Sculpting', 'Charcoal Detox Deep Cleanse Facial', 'Ayurvedic Head & Shoulder Therapy'],
+        price: 4800,
+        discountPrice: 3499,
+        image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=1200&auto=format&fit=crop',
+        validUntil: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
+        isActive: true,
+        badge: 'Executive Special',
+      },
+      {
+        name: 'The Luxe Signature Hair Ritual',
+        description: 'A transformative hair package combining restorative Moroccan Argan Spa, custom cut, and thermal gloss blow-dry.',
+        services: ['Precision Haircut & Styling', 'Moroccan Argan Hair Spa', 'Olaplex Bond Infusion', 'Velvet Blow Dry Finish'],
+        price: 4500,
+        discountPrice: 3199,
+        image: 'https://images.unsplash.com/photo-1560869713-7d0a29430803?q=80&w=1200&auto=format&fit=crop',
+        validUntil: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
+        isActive: true,
+        badge: 'Most Loved',
+      },
+      {
+        name: 'Bridal Royal Glow Sanctuary',
+        description: 'Comprehensive pre-bridal and wedding day sanctuary package for timeless perfection.',
+        services: ['24K Gold Luminescence Facial', 'Full Body Organic De-Tan & Polish', 'Champagne Pedicure & Silk Manicure', 'Luxe Couture HD Airbrush Makeup'],
+        price: 26000,
+        discountPrice: 19999,
+        image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=1200&auto=format&fit=crop',
+        validUntil: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+        isActive: true,
+        badge: 'Wedding Special',
+      },
+      {
+        name: 'Self-Care Wellness Sanctuary',
+        description: 'Indulge in 2.5 hours of sheer relaxation with our curated skin and hand/foot wellness therapy.',
+        services: ['Hydra-Infusion Glow Therapy', 'Champagne Rose Pedicure', 'Velvet Silk Manicure', 'Aromatherapy Scalp Revitalizer'],
+        price: 6200,
+        discountPrice: 4499,
+        image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=1200&auto=format&fit=crop',
+        validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        isActive: true,
+        badge: 'Weekend Special',
+      },
+    ];
+
+    await Offer.insertMany(offers);
+
+    // 5. Seed Testimonials (Both Men & Women)
+    const testimonials = [
+      {
+        customerName: 'Karthik Natarajan',
+        review: 'Easily the finest men’s grooming experience in Tiruppur. The Executive haircut and hot towel beard sculpt are razor sharp. Private chair, great coffee, and absolute precision.',
+        rating: 5,
+        image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600&auto=format&fit=crop',
+        isApproved: true,
+        serviceUsed: 'The Executive Gentleman Haircut & Beard Sculpt',
+        location: 'Avinashi Road, Tiruppur',
+      },
+      {
+        customerName: 'Priya Soundararajan',
+        review: 'Luxe Salon is on another level! The 24K Gold Facial and bridal styling for my engagement were beyond phenomenal. The ambiance is calming and luxurious.',
+        rating: 5,
+        image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop',
+        isApproved: true,
+        serviceUsed: 'Bridal Engagement Glam & Facial',
+        location: 'Tiruppur',
+      },
+      {
+        customerName: 'Deepak Varma',
+        review: 'The vibe is understated masculine luxury. No loud chatter, soothing background jazz, premium coffee, and barbers who really understand hair geometry. Worth every rupee.',
+        rating: 5,
+        image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=600&auto=format&fit=crop',
+        isApproved: true,
+        serviceUsed: 'Ayurvedic Head Massage & Beard Architecture',
+        location: 'Kangeyam Road, Tiruppur',
+      },
+      {
+        customerName: 'Ananya Ramachandran',
+        review: 'I had my Balayage highlights done here and the color transition is completely seamless. They took the time to do a proper consultation and used Olaplex!',
+        rating: 5,
+        image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=600&auto=format&fit=crop',
+        isApproved: true,
+        serviceUsed: 'Handcrafted Balayage & Hair Spa',
+        location: 'Tiruppur',
+      },
+    ];
+
+    await Testimonial.insertMany(testimonials);
+
+    // 6. Seed Sample Appointments
+    const sampleAppointments = [
+      {
+        name: 'Arun Kumar',
+        phone: '+91 97890 12345',
+        email: 'arunkumar.tiruppur@gmail.com',
+        service: 'The Executive Gentleman Haircut & Styling',
+        appointmentDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        appointmentTime: '03:30 PM',
+        message: 'Looking for a clean taper fade and beard detailing.',
+        status: 'confirmed',
+        notes: 'Assigned to Master Barber Aravind',
+      },
+      {
+        name: 'Rithanya S.',
+        phone: '+91 98421 55678',
+        email: 'rithanya.s@gmail.com',
+        service: 'Signature Haircut & Editorial Styling',
+        appointmentDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+        appointmentTime: '11:00 AM',
+        message: 'Prefer soft face-framing layers and blowout.',
+        status: 'pending',
+      },
+      {
+        name: 'Sivakami Murugan',
+        phone: '+91 94432 99881',
+        email: 'sivakami.m@yahoo.com',
+        service: 'Luxe Couture Bridal Makeover Experience',
+        appointmentDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+        appointmentTime: '10:00 AM',
+        message: 'Consultation for reception and muhurtham makeup.',
+        status: 'confirmed',
+        notes: 'Pre-bridal skin trial scheduled.',
+      },
+    ];
+
+    await Appointment.insertMany(sampleAppointments);
+
+    // 7. Seed Sample Contact Messages
+    const sampleContact = [
+      {
+        name: 'Vigneshwaran M.',
+        email: 'vicky.m@gmail.com',
+        phone: '+91 99945 11223',
+        subject: 'Grooming Package Inquiry for Groomsmen',
+        message: 'Hello Luxe Salon team, do you offer group executive grooming packages for 5 gentlemen before a wedding reception in Tiruppur?',
+        isRead: false,
+      },
+      {
+        name: 'Kavitha Balaji',
+        email: 'kavitha.b@outlook.com',
+        phone: '+91 98430 77665',
+        subject: 'Bridal Party Booking for December 2026',
+        message: 'Hello Luxe Salon team, would love to know availability for our bridal party.',
+        isRead: true,
+      },
+    ];
+
+    await ContactMessage.insertMany(sampleContact);
+
+    console.log('[Seed] Database seeded successfully with balanced unisex luxury data!');
+  } catch (error) {
+    console.error('[Seed] Error during seeding:', error);
+  }
+};
+
+// If run directly via CLI
+if (process.argv[1]?.includes('seed')) {
+  (async () => {
+    const { connectDB, closeDB } = await import('../config/db.js');
+    await connectDB();
+    await seedDatabase();
+    await closeDB();
+    process.exit(0);
+  })();
+}
+

@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #FAF7F2;
+  --bg-secondary: #F4EFE6;
+  --text-primary: #141413;
+  --text-muted: #68635C;
+  --accent-gold: #C5A880;
+  --accent-gold-rich: #D4AF37;
+  --border-light: #E3DBD0;
+}
+
+@layer base {
+  * {
+    @apply border-luxe-border;
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    scroll-behavior: smooth;
+    background-color: #FAF7F2;
+    color: #141413;
+    font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+    margin: 0;
+    padding: 0;
+  }
+
+  ::selection {
+    background-color: #C5A880;
+    color: #FAF7F2;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-cormorant), Georgia, serif;
+    letter-spacing: -0.01em;
+    font-feature-settings: "liga" 1, "kern" 1;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  /* Safe inputs on mobile iOS */
+  input, select, textarea {
+    font-size: 16px !important; /* Prevents auto-zoom on iOS */
+  }
+
+  @media (min-width: 640px) {
+    input, select, textarea {
+      font-size: 0.875rem !important;
+    }
+  }
+}
+
+/* Custom Editorial Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FAF7F2;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D8CEBE;
+  border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C5A880;
+}
+
+/* Luxury Utilities */
+.font-editorial {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-style: normal;
+}
+
+.font-italiana {
+  font-family: var(--font-italiana), 'Cormorant Garamond', serif;
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #141413 0%, #A3845A 50%, #C5A880 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.champagne-border {
+  border: 1px solid rgba(197, 168, 128, 0.35);
+}
+
+.glass-nav {
+  background: rgba(250, 247, 242, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(227, 219, 208, 0.8);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(227, 219, 208, 0.7);
+}
+
+.safe-bottom-padding {
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
